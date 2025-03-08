@@ -1,14 +1,40 @@
 import { TExercise } from "@/types/exercises";
-import { View, Text } from "react-native";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 
 type ExerciseProps = {
   exercise: TExercise;
+  removeExercise: (exerciseId: string) => void;
 };
 
-export default function Exercise({ exercise }: ExerciseProps) {
+export default function Exercise({ exercise, removeExercise }: ExerciseProps) {
   return (
-    <View>
-      <Text>{exercise.title}</Text>
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.title}>{exercise.title}</Text>
+        <Pressable onPress={() => removeExercise(exercise.id)}>
+          <FontAwesome6 name="xmark" size={24} color="red" />
+        </Pressable>
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    backgroundColor: "white",
+    paddingBlock: 15,
+    paddingInline: 20,
+    borderRadius: 5,
+  },
+  content: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 16,
+  },
+});

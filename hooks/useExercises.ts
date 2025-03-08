@@ -23,5 +23,14 @@ export function useExercises() {
     saveExercises(updatedExercises);
   };
 
-  return { exercises, addExercise };
+  const removeExercise = (exerciseId: string) => {
+    const updatedExercises = exercises.filter(
+      (exercise) => exercise.id !== exerciseId,
+    );
+
+    setExercises(updatedExercises);
+    saveExercises(updatedExercises);
+  };
+
+  return { exercises, addExercise, removeExercise };
 }

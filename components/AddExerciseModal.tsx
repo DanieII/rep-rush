@@ -27,6 +27,7 @@ export default function AddExerciseModal({
     if (!exerciseTitle.trim()) return;
 
     addExercise(exerciseTitle);
+    setExerciseTitle("");
     setModalVisible(false);
   };
 
