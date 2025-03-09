@@ -1,12 +1,17 @@
 import AddExercise from "@/components/AddExercise";
 import Exercise from "@/components/Exercise";
-import { useExercises } from "@/hooks/useExercises";
-import { useState } from "react";
+import { useExerciseStore } from "@/store/exerciseStore";
+import { useEffect, useState } from "react";
 import { View, Button, StyleSheet, FlatList } from "react-native";
 
 export default function Exercises() {
-  const { exercises, addExercise, removeExercise } = useExercises();
+  const { exercises, loadExercises, addExercise, removeExercise } =
+    useExerciseStore();
   const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    loadExercises();
+  }, []);
 
   return (
     <View style={styles.container}>

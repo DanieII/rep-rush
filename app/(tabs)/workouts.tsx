@@ -1,12 +1,16 @@
 import AddWorkout from "@/components/AddWorkout";
 import Workout from "@/components/Workout";
-import { useWorkouts } from "@/hooks/useWorkouts";
-import { useState } from "react";
+import { useWorkoutStore } from "@/store/workoutStore";
+import { useEffect, useState } from "react";
 import { View, StyleSheet, FlatList, Button } from "react-native";
 
 export default function Workouts() {
-  const { workouts, addWorkout } = useWorkouts();
+  const { workouts, loadWorkouts, addWorkout } = useWorkoutStore();
   const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    loadWorkouts();
+  }, []);
 
   return (
     <View style={styles.container}>

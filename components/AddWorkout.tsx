@@ -10,10 +10,9 @@ import {
 } from "react-native";
 import CustomModal from "./CustomModal";
 import { TExercise } from "@/types/exercises";
-import { useExercises } from "@/hooks/useExercises";
+import { useExerciseStore } from "@/store/exerciseStore";
 import { Controller, useForm } from "react-hook-form";
-import { useState } from "react";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { useEffect, useState } from "react";
 
 type AddWorkoutProps = {
   modalVisible: boolean;
@@ -37,12 +36,13 @@ export default function AddWorkout({
   setModalVisible,
   addWorkout,
 }: AddWorkoutProps) {
-  const { exercises } = useExercises();
+  const { exercises, loadExercises } = useExerciseStore();
   const [selectedExercises, setSelectedExercises] = useState<TExercise[]>([]);
   const [selectedExercisesError, setSelectedExercisesError] = useState("");
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     defaultValues: {
@@ -51,6 +51,10 @@ export default function AddWorkout({
       rest_duration: "",
     },
   });
+
+  useEffect(() => {
+    loadExercises();
+  }, []);
 
   const onSubmit = (data: FormData) => {
     if (!selectedExercises.length) {
@@ -66,18 +70,23 @@ export default function AddWorkout({
       Number(rest_duration),
     );
 
+    reset();
+    setSelectedExercises([]);
     setSelectedExercisesError("");
     setModalVisible(false);
   };
 
   const toggleExercise = (exercise: TExercise, isSelected: boolean) => {
     setSelectedExercises((prev) => {
+      // Remove the exercise if it is already selected
       if (isSelected) {
         return prev.filter(
           (currentExercise) => currentExercise.id !== exercise.id,
         );
       }
 
+      // Otherwise add the exercise and reset exercises error message
+      setSelectedExercisesError("");
       return [...prev, exercise];
     });
   };
@@ -222,7 +231,11 @@ const styles = StyleSheet.create({
     color: "red",
     textAlign: "center",
   },
-  exercisesHeading: {},
+  exercisesHeading: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
   exercises: {
     gap: 20,
     flexGrow: 1,
@@ -238,10 +251,5 @@ const styles = StyleSheet.create({
   },
   selectedExerciseText: {
     color: Platform.OS === "ios" ? "#007AFF" : "#2196F3",
-  },
-  exercisesHeading: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 10,
   },
 });
