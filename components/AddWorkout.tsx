@@ -13,6 +13,7 @@ import { TExercise } from "@/types/exercises";
 import { useExerciseStore } from "@/store/exerciseStore";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
+import { Link } from "expo-router";
 
 type AddWorkoutProps = {
   modalVisible: boolean;
@@ -20,15 +21,15 @@ type AddWorkoutProps = {
   addWorkout: (
     workoutTitle: string,
     exercises: TExercise[],
-    exercise_duration: number,
-    rest_duration: number,
+    exerciseDuration: number,
+    restDuration: number,
   ) => void;
 };
 
 type FormData = {
   title: string;
-  exercise_duration: string;
-  rest_duration: string;
+  exerciseDuration: string;
+  restDuration: string;
 };
 
 export default function AddWorkout({
@@ -47,8 +48,8 @@ export default function AddWorkout({
   } = useForm<FormData>({
     defaultValues: {
       title: "",
-      exercise_duration: "",
-      rest_duration: "",
+      exerciseDuration: "",
+      restDuration: "",
     },
   });
 
@@ -62,12 +63,12 @@ export default function AddWorkout({
       return;
     }
 
-    const { title, exercise_duration, rest_duration } = data;
+    const { title, exerciseDuration, restDuration } = data;
     addWorkout(
       title,
       selectedExercises,
-      Number(exercise_duration),
-      Number(rest_duration),
+      Number(exerciseDuration),
+      Number(restDuration),
     );
 
     reset();
@@ -125,9 +126,9 @@ export default function AddWorkout({
               value={value}
             />
           )}
-          name="exercise_duration"
+          name="exerciseDuration"
         />
-        {errors.exercise_duration && (
+        {errors.exerciseDuration && (
           <Text style={styles.errorMsg}>Enter a valid duration.</Text>
         )}
 
@@ -144,9 +145,9 @@ export default function AddWorkout({
               value={value}
             />
           )}
-          name="rest_duration"
+          name="restDuration"
         />
-        {errors.rest_duration && (
+        {errors.restDuration && (
           <Text style={styles.errorMsg}>Enter a valid rest duration.</Text>
         )}
 
@@ -175,7 +176,11 @@ export default function AddWorkout({
                 </Pressable>
               );
             }}
-            ListEmptyComponent={<Text>Add exercises first.</Text>}
+            ListEmptyComponent={
+              <Link onPress={() => setModalVisible(false)} href="/exercises">
+                Add exercises
+              </Link>
+            }
           />
         </View>
 
@@ -204,7 +209,7 @@ export default function AddWorkout({
                 </Pressable>
               );
             }}
-            ListEmptyComponent={<Text>No exercises selected.</Text>}
+            ListEmptyComponent={<Text>No exercises selected</Text>}
           />
         </View>
         {selectedExercisesError && (

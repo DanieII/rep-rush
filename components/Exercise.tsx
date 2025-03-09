@@ -50,12 +50,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   content: {
-    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
   title: {
     fontSize: 16,
+    fontWeight: "bold",
   },
 });

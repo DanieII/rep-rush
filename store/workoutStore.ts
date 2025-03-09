@@ -10,8 +10,8 @@ type WorkoutStore = {
   addWorkout: (
     workoutTitle: string,
     exercises: TExercise[],
-    exercise_duration: number,
-    rest_duration: number,
+    exerciseDuration: number,
+    restDuration: number,
   ) => void;
   removeWorkout: (workoutId: string) => void;
 };
@@ -28,16 +28,16 @@ export const useWorkoutStore = create<WorkoutStore>((set) => ({
   addWorkout: (
     workoutTitle: string,
     exercises: TExercise[],
-    exercise_duration: number,
-    rest_duration: number,
+    exerciseDuration: number,
+    restDuration: number,
   ) => {
     const workoutId = randomUUID();
     const newWorkout: TWorkout = {
       id: workoutId,
       title: workoutTitle,
       exercises,
-      exercise_duration,
-      rest_duration,
+      exerciseDuration,
+      restDuration,
     };
 
     set((state) => {

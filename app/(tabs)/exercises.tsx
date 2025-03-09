@@ -2,7 +2,7 @@ import AddExercise from "@/components/AddExercise";
 import Exercise from "@/components/Exercise";
 import { useExerciseStore } from "@/store/exerciseStore";
 import { useEffect, useState } from "react";
-import { View, Button, StyleSheet, FlatList } from "react-native";
+import { View, Button, StyleSheet, FlatList, Text } from "react-native";
 
 export default function Exercises() {
   const { exercises, loadExercises, addExercise, removeExercise } =
@@ -22,6 +22,9 @@ export default function Exercises() {
           <Exercise exercise={item} removeExercise={removeExercise} />
         )}
         keyExtractor={(item) => item.id}
+        ListEmptyComponent={
+          <Text style={styles.emptyText}>No exercises available</Text>
+        }
       />
       <Button onPress={() => setModalVisible(true)} title="Add Exercise" />
       <AddExercise
@@ -41,5 +44,9 @@ const styles = StyleSheet.create({
   },
   exercises: {
     gap: 20,
+  },
+  emptyText: {
+    fontSize: 18,
+    textAlign: "center",
   },
 });
