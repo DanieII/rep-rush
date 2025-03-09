@@ -1,6 +1,6 @@
 import { FontAwesome6 } from "@expo/vector-icons";
-import { Modal, Pressable, StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Modal, Pressable, StyleSheet, View, ScrollView } from "react-native";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 type CustomModalProps = {
   modalVisible: boolean;
@@ -19,27 +19,27 @@ export default function CustomModal({
       visible={modalVisible}
       onRequestClose={() => setModalVisible(false)}
     >
-      <SafeAreaView style={styles.modal}>
-        <View style={styles.container}>
-          <Pressable onPress={() => setModalVisible(false)}>
-            <FontAwesome6 name="xmark" size={24} color="black" />
-          </Pressable>
-          <View style={styles.content}>{children}</View>
-        </View>
-      </SafeAreaView>
+      <SafeAreaProvider>
+        <SafeAreaView style={styles.container}>
+          <View style={styles.content}>
+            <Pressable onPress={() => setModalVisible(false)}>
+              <FontAwesome6 name="xmark" size={24} color="black" />
+            </Pressable>
+            <View>{children}</View>
+          </View>
+        </SafeAreaView>
+      </SafeAreaProvider>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  modal: {
-    flex: 1,
-  },
   container: {
     flex: 1,
-    padding: 30,
   },
   content: {
-    marginBlock: "auto",
+    flex: 1,
+    gap: 30,
+    padding: 30,
   },
 });

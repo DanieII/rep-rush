@@ -17,13 +17,13 @@ export default function Exercises() {
           <Exercise exercise={item} removeExercise={removeExercise} />
         )}
         keyExtractor={(item) => item.id}
-      ></FlatList>
+      />
+      <Button onPress={() => setModalVisible(true)} title="Add Exercise" />
       <AddExercise
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         addExercise={addExercise}
       />
-      <Button onPress={() => setModalVisible(true)} title="Add Exercise" />
     </View>
   );
 }

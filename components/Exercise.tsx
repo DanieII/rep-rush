@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 
 type ExerciseProps = {
   exercise: TExercise;
-  removeExercise: (exerciseId: string) => void;
+  removeExercise?: (exerciseId: string) => void;
 };
 
 export default function Exercise({ exercise, removeExercise }: ExerciseProps) {
@@ -12,9 +12,11 @@ export default function Exercise({ exercise, removeExercise }: ExerciseProps) {
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>{exercise.title}</Text>
-        <Pressable onPress={() => removeExercise(exercise.id)}>
-          <FontAwesome6 name="xmark" size={24} color="red" />
-        </Pressable>
+        {removeExercise && (
+          <Pressable onPress={() => removeExercise(exercise.id)}>
+            <FontAwesome6 name="xmark" size={24} color="red" />
+          </Pressable>
+        )}
       </View>
     </View>
   );

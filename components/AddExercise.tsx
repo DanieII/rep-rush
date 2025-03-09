@@ -63,8 +63,9 @@ export default function AddExercise({
           name="title"
         />
         {errors.title && (
-          <Text style={styles.errorMsg}>Exercise title is required.</Text>
+          <Text style={styles.errorMsg}>Title is required.</Text>
         )}
+
         <Button title="Add Exercise" onPress={handleSubmit(onSubmit)} />
       </View>
     </CustomModal>
@@ -76,7 +77,6 @@ const styles = StyleSheet.create({
     gap: 20,
   },
   input: {
-    width: "100%",
     borderWidth: 2,
     paddingInline: 20,
     paddingBlock: 15,
