@@ -1,4 +1,4 @@
-import AddExerciseModal from "@/components/AddExerciseModal";
+import AddExercise from "@/components/AddExercise";
 import Exercise from "@/components/Exercise";
 import { useExercises } from "@/hooks/useExercises";
 import { useState } from "react";
@@ -22,7 +22,7 @@ export default function Exercises() {
           ))}
         </View>
       </ScrollView>
-      <AddExerciseModal
+      <AddExercise
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         addExercise={addExercise}
