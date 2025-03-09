@@ -1,6 +1,5 @@
-import { getExercises, saveExercises } from "@/lib/exercises";
+import { addExercise, getExercises, removeExercise } from "@/lib/exercises";
 import { TExercise } from "@/types/exercises";
-import { randomUUID } from "expo-crypto";
 import { create } from "zustand";
 
 type ExerciseStore = {
@@ -20,27 +19,14 @@ export const useExerciseStore = create<ExerciseStore>((set) => ({
   },
 
   addExercise: (exerciseTitle) => {
-    const exerciseId = randomUUID();
-    const newExercise: TExercise = { id: exerciseId, title: exerciseTitle };
+    const newExercises = addExercise(exerciseTitle);
 
-    set((state) => {
-      const updatedExercises = [...state.exercises, newExercise];
-
-      saveExercises(updatedExercises);
-
-      return { exercises: updatedExercises };
-    });
+    set({ exercises: newExercises });
   },
 
   removeExercise: (exerciseId) => {
-    set((state) => {
-      const updatedExercises = state.exercises.filter(
-        (exercise) => exercise.id !== exerciseId,
-      );
+    const newExercises = removeExercise(exerciseId);
 
-      saveExercises(updatedExercises);
-
-      return { exercises: updatedExercises };
-    });
+    set({ exercises: newExercises });
   },
 }));
