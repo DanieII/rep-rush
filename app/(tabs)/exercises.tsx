@@ -35,11 +35,11 @@ export default function Exercises() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 20,
+    gap: 30,
     padding: 30,
   },
   exercises: {
     flex: 1,
-    gap: 15,
+    gap: 20,
   },
 });

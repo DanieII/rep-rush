@@ -6,9 +6,11 @@ import {
   SafeAreaView,
   Button,
   Pressable,
+  Text,
 } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { useEffect } from "react";
 
 type AddExerciseModalProps = {
   modalVisible: boolean;
@@ -16,18 +18,36 @@ type AddExerciseModalProps = {
   addExercise: (exerciseTitle: string) => void;
 };
 
+type FormData = {
+  title: string;
+};
+
 export default function AddExerciseModal({
   modalVisible,
   setModalVisible,
   addExercise,
 }: AddExerciseModalProps) {
-  const [exerciseTitle, setExerciseTitle] = useState("");
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitSuccessful },
+  } = useForm<FormData>({
+    defaultValues: {
+      title: "",
+    },
+  });
 
-  const handleAddExercise = () => {
-    if (!exerciseTitle.trim()) return;
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset();
+    }
+  }, [isSubmitSuccessful]);
 
-    addExercise(exerciseTitle);
-    setExerciseTitle("");
+  const onSubmit = (data: FormData) => {
+    const { title } = data;
+
+    addExercise(title);
     setModalVisible(false);
   };
 
@@ -46,14 +66,27 @@ export default function AddExerciseModal({
             <FontAwesome6 name="xmark" size={24} color="black" />
           </Pressable>
           <View style={styles.form}>
-            <TextInput
-              style={styles.input}
-              placeholder="Title"
-              autoCapitalize="words"
-              value={exerciseTitle}
-              onChangeText={setExerciseTitle}
+            <Controller
+              control={control}
+              rules={{
+                required: true,
+              }}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  style={styles.input}
+                  autoCapitalize="words"
+                  placeholder="Title"
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                />
+              )}
+              name="title"
             />
-            <Button title="Add Exercise" onPress={handleAddExercise} />
+            {errors.title && (
+              <Text style={styles.errorMsg}>Exercise title is required.</Text>
+            )}
+            <Button title="Add Exercise" onPress={handleSubmit(onSubmit)} />
           </View>
         </View>
       </SafeAreaView>
@@ -74,12 +107,17 @@ const styles = StyleSheet.create({
   form: {
     width: "100%",
     marginBlock: "auto",
-    gap: 10,
+    gap: 20,
   },
   input: {
     width: "100%",
-    borderWidth: 1,
-    padding: 10,
+    borderWidth: 2,
+    paddingInline: 20,
+    paddingBlock: 15,
     borderRadius: 5,
+  },
+  errorMsg: {
+    color: "red",
+    textAlign: "center",
   },
 });
