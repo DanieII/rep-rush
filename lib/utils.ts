@@ -1,4 +1,5 @@
 import { TWorkout } from "@/types/workouts";
+import { Platform } from "react-native";
 
 export const calculateWorkoutDuration = (workout: TWorkout) => {
   const { exerciseDuration, restDuration, exercises } = workout;
@@ -13,4 +14,11 @@ export const calculateWorkoutDuration = (workout: TWorkout) => {
   const workoutExtraSeconds = workoutDuration % 60;
 
   return `${workoutMinutes}m ${workoutExtraSeconds}s`;
+};
+
+export const getPrimaryColor = () => {
+  if (Platform.OS === "ios") {
+    return "#007AFF";
+  }
+  return "#2196F3";
 };

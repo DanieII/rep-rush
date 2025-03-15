@@ -1,7 +1,9 @@
-import { TextInput, StyleSheet, View, Button, Text } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useEffect } from "react";
 import CustomModal from "./CustomModal";
+import CustomButton from "./CustomButton";
+import CustomInput from "./CustomInput";
 
 type AddExerciseProps = {
   modalVisible: boolean;
@@ -51,8 +53,7 @@ export default function AddExercise({
             required: true,
           }}
           render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              style={styles.input}
+            <CustomInput
               autoCapitalize="words"
               placeholder="Title"
               onBlur={onBlur}
@@ -62,11 +63,8 @@ export default function AddExercise({
           )}
           name="title"
         />
-        {errors.title && (
-          <Text style={styles.errorMsg}>Title is required.</Text>
-        )}
-
-        <Button title="Add Exercise" onPress={handleSubmit(onSubmit)} />
+        {errors.title && <Text style={styles.error}>Title is required.</Text>}
+        <CustomButton title="Add Exercise" onPress={handleSubmit(onSubmit)} />
       </View>
     </CustomModal>
   );
@@ -76,13 +74,7 @@ const styles = StyleSheet.create({
   form: {
     gap: 20,
   },
-  input: {
-    borderWidth: 2,
-    paddingInline: 20,
-    paddingBlock: 15,
-    borderRadius: 5,
-  },
-  errorMsg: {
+  error: {
     color: "red",
     textAlign: "center",
   },

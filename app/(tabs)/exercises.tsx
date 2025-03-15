@@ -1,8 +1,9 @@
-import AddExercise from "@/components/AddExercise";
+import AddExerciseModal from "@/components/AddExerciseModal";
+import CustomButton from "@/components/CustomButton";
 import Exercise from "@/components/Exercise";
 import { useExerciseStore } from "@/store/exerciseStore";
 import { useEffect, useState } from "react";
-import { View, Button, StyleSheet, FlatList, Text } from "react-native";
+import { View, StyleSheet, FlatList, Text } from "react-native";
 
 export default function Exercises() {
   const { exercises, loadExercises, addExercise, removeExercise } =
@@ -26,8 +27,11 @@ export default function Exercises() {
           <Text style={styles.emptyText}>No exercises available</Text>
         }
       />
-      <Button onPress={() => setModalVisible(true)} title="Add Exercise" />
-      <AddExercise
+      <CustomButton
+        title="Add Exercise"
+        onPress={() => setModalVisible(true)}
+      />
+      <AddExerciseModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
         addExercise={addExercise}

@@ -1,13 +1,11 @@
-import AddWorkout from "@/components/AddWorkout";
+import CustomButton from "@/components/CustomButton";
 import Workout from "@/components/Workout";
 import { useWorkoutStore } from "@/store/workoutStore";
-import { useEffect, useState } from "react";
-import { View, StyleSheet, FlatList, Button, Text } from "react-native";
+import { useEffect } from "react";
+import { View, StyleSheet, FlatList, Text } from "react-native";
 
 export default function Workouts() {
-  const { workouts, loadWorkouts, addWorkout, removeWorkout } =
-    useWorkoutStore();
-  const [modalVisible, setModalVisible] = useState(false);
+  const { workouts, loadWorkouts, removeWorkout } = useWorkoutStore();
 
   useEffect(() => {
     loadWorkouts();
@@ -26,12 +24,7 @@ export default function Workouts() {
           <Text style={styles.emptyText}>No workouts available</Text>
         }
       ></FlatList>
-      <Button onPress={() => setModalVisible(true)} title="Add Workout" />
-      <AddWorkout
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
-        addWorkout={addWorkout}
-      />
+      <CustomButton title="Add Workout" link="/(tabs)/workouts/add" />
     </View>
   );
 }

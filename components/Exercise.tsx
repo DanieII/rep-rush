@@ -9,7 +9,7 @@ type ExerciseProps = {
 };
 
 export default function Exercise({ exercise, removeExercise }: ExerciseProps) {
-  const onRemoveBtnPress = (exerciseId: string) => {
+  const handleRemove = (exerciseId: string) => {
     try {
       removeExercise(exerciseId);
     } catch (error) {
@@ -33,7 +33,7 @@ export default function Exercise({ exercise, removeExercise }: ExerciseProps) {
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.title}>{exercise.title}</Text>
-        <Pressable onPress={() => onRemoveBtnPress(exercise.id)}>
+        <Pressable onPress={() => handleRemove(exercise.id)}>
           <FontAwesome6 name="xmark" size={24} color="red" />
         </Pressable>
       </View>
@@ -43,7 +43,6 @@ export default function Exercise({ exercise, removeExercise }: ExerciseProps) {
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
     backgroundColor: "white",
     paddingBlock: 20,
     paddingInline: 25,

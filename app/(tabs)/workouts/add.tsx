@@ -1,30 +1,13 @@
-import {
-  View,
-  StyleSheet,
-  TextInput,
-  Text,
-  Button,
-  FlatList,
-  Pressable,
-} from "react-native";
-import CustomModal from "./CustomModal";
+import { View, StyleSheet, Text, FlatList } from "react-native";
 import { TExercise } from "@/types/exercises";
 import { useExerciseStore } from "@/store/exerciseStore";
 import { Controller, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { Link } from "expo-router";
-import { getPrimaryColor } from "@/lib/utils";
-
-type AddWorkoutProps = {
-  modalVisible: boolean;
-  setModalVisible: (modalVisible: boolean) => void;
-  addWorkout: (
-    workoutTitle: string,
-    exercises: TExercise[],
-    exerciseDuration: number,
-    restDuration: number,
-  ) => void;
-};
+import { Link, router } from "expo-router";
+import CustomButton from "@/components/CustomButton";
+import CustomInput from "@/components/CustomInput";
+import ExerciseToggle from "@/components/ExerciseToggle";
+import { useWorkoutStore } from "@/store/workoutStore";
 
 type FormData = {
   title: string;
@@ -32,12 +15,9 @@ type FormData = {
   restDuration: string;
 };
 
-export default function AddWorkout({
-  modalVisible,
-  setModalVisible,
-  addWorkout,
-}: AddWorkoutProps) {
+export default function AddWorkout() {
   const { exercises, loadExercises } = useExerciseStore();
+  const { addWorkout } = useWorkoutStore();
   const [selectedExercises, setSelectedExercises] = useState<TExercise[]>([]);
   const [selectedExercisesError, setSelectedExercisesError] = useState("");
   const {
@@ -74,33 +54,17 @@ export default function AddWorkout({
     reset();
     setSelectedExercises([]);
     setSelectedExercisesError("");
-    setModalVisible(false);
-  };
-
-  const toggleExercise = (exercise: TExercise, isSelected: boolean) => {
-    setSelectedExercises((prev) => {
-      // Remove the exercise if it is already selected
-      if (isSelected) {
-        return prev.filter(
-          (currentExercise) => currentExercise.id !== exercise.id,
-        );
-      }
-
-      // Otherwise add the exercise and reset exercises error message
-      setSelectedExercisesError("");
-      return [...prev, exercise];
-    });
+    router.back();
   };
 
   return (
-    <CustomModal modalVisible={modalVisible} setModalVisible={setModalVisible}>
+    <View style={styles.container}>
       <View style={styles.form}>
         <Controller
           control={control}
           rules={{ required: true }}
           render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              style={styles.input}
+            <CustomInput
               placeholder="Title"
               onBlur={onBlur}
               onChangeText={onChange}
@@ -109,16 +73,13 @@ export default function AddWorkout({
           )}
           name="title"
         />
-        {errors.title && (
-          <Text style={styles.errorMsg}>Title is required.</Text>
-        )}
+        {errors.title && <Text style={styles.error}>Title is required.</Text>}
 
         <Controller
           control={control}
           rules={{ required: true, min: 1, pattern: /^[0-9]*$/ }}
           render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              style={styles.input}
+            <CustomInput
               placeholder="Exercise Duration (seconds)"
               keyboardType="numeric"
               onBlur={onBlur}
@@ -129,15 +90,14 @@ export default function AddWorkout({
           name="exerciseDuration"
         />
         {errors.exerciseDuration && (
-          <Text style={styles.errorMsg}>Enter a valid duration.</Text>
+          <Text style={styles.error}>Enter a valid duration.</Text>
         )}
 
         <Controller
           control={control}
           rules={{ required: true, min: 1, pattern: /^[0-9]*$/ }}
           render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              style={styles.input}
+            <CustomInput
               placeholder="Rest Duration (seconds)"
               keyboardType="numeric"
               onBlur={onBlur}
@@ -148,7 +108,7 @@ export default function AddWorkout({
           name="restDuration"
         />
         {errors.restDuration && (
-          <Text style={styles.errorMsg}>Enter a valid rest duration.</Text>
+          <Text style={styles.error}>Enter a valid rest duration.</Text>
         )}
 
         <View>
@@ -163,24 +123,15 @@ export default function AddWorkout({
               const isSelected = selectedExercises.includes(item);
 
               return (
-                <Pressable
-                  style={[
-                    styles.exercise,
-                    isSelected && styles.selectedExercise,
-                  ]}
-                  onPress={() => toggleExercise(item, isSelected)}
-                >
-                  <Text style={isSelected && styles.selectedExerciseText}>
-                    {item.title}
-                  </Text>
-                </Pressable>
+                <ExerciseToggle
+                  exercise={item}
+                  isSelected={isSelected}
+                  setSelectedExercises={setSelectedExercises}
+                  setSelectedExercisesError={setSelectedExercisesError}
+                />
               );
             }}
-            ListEmptyComponent={
-              <Link onPress={() => setModalVisible(false)} href="/exercises">
-                Add exercises
-              </Link>
-            }
+            ListEmptyComponent={<Link href="/exercises">Add exercises</Link>}
           />
         </View>
 
@@ -196,43 +147,35 @@ export default function AddWorkout({
               const isSelected = selectedExercises.includes(item);
 
               return (
-                <Pressable
-                  style={[
-                    styles.exercise,
-                    isSelected && styles.selectedExercise,
-                  ]}
-                  onPress={() => toggleExercise(item, isSelected)}
-                >
-                  <Text style={isSelected && styles.selectedExerciseText}>
-                    {item.title}
-                  </Text>
-                </Pressable>
+                <ExerciseToggle
+                  exercise={item}
+                  isSelected={isSelected}
+                  setSelectedExercises={setSelectedExercises}
+                  setSelectedExercisesError={setSelectedExercisesError}
+                />
               );
             }}
             ListEmptyComponent={<Text>No exercises selected</Text>}
           />
         </View>
         {selectedExercisesError && (
-          <Text style={styles.errorMsg}>{selectedExercisesError}</Text>
+          <Text style={styles.error}>{selectedExercisesError}</Text>
         )}
 
-        <Button title="Add Workout" onPress={handleSubmit(onSubmit)} />
+        <CustomButton title="Add Workout" onPress={handleSubmit(onSubmit)} />
       </View>
-    </CustomModal>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    padding: 30,
+  },
   form: {
     gap: 20,
   },
-  input: {
-    borderWidth: 2,
-    paddingInline: 20,
-    paddingBlock: 15,
-    borderRadius: 5,
-  },
-  errorMsg: {
+  error: {
     color: "red",
     textAlign: "center",
   },
@@ -244,17 +187,5 @@ const styles = StyleSheet.create({
   exercises: {
     gap: 20,
     flexGrow: 1,
-  },
-  exercise: {
-    borderWidth: 2,
-    paddingInline: 20,
-    paddingBlock: 15,
-    borderRadius: 5,
-  },
-  selectedExercise: {
-    borderColor: getPrimaryColor(),
-  },
-  selectedExerciseText: {
-    color: getPrimaryColor(),
   },
 });

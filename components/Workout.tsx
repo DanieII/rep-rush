@@ -1,7 +1,8 @@
 import { TWorkout } from "@/types/workouts";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { View, Text, StyleSheet, Pressable } from "react-native";
-import { calculateWorkoutDuration } from "@/lib/utils";
+import { calculateWorkoutDuration, getPrimaryColor } from "@/lib/utils";
+import { Link } from "expo-router";
 
 type WorkoutProps = {
   workout: TWorkout;
@@ -16,9 +17,16 @@ export default function Workout({ workout, removeWorkout }: WorkoutProps) {
           <Text style={styles.title}>{workout.title}</Text>
           <Text>{calculateWorkoutDuration(workout)}</Text>
         </View>
-        <Pressable onPress={() => removeWorkout(workout.id)}>
-          <FontAwesome6 name="xmark" size={24} color="red" />
-        </Pressable>
+        <View style={styles.actions}>
+          <Pressable onPress={() => removeWorkout(workout.id)}>
+            <FontAwesome6 name="xmark" size={24} color="red" />
+          </Pressable>
+          <Link
+            href={{ pathname: "/workouts/[id]", params: { id: workout.id } }}
+          >
+            <FontAwesome6 name="play" size={24} color={getPrimaryColor()} />
+          </Link>
+        </View>
       </View>
     </View>
   );
@@ -43,5 +51,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: "bold",
+  },
+  actions: {
+    flexDirection: "row",
+    gap: 15,
   },
 });
