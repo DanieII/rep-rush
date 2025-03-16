@@ -4,15 +4,7 @@ import { Tabs } from "expo-router";
 export default function TabLayout() {
   return (
     <Tabs>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => (
-            <FontAwesome6 size={24} name="house" color={color} />
-          ),
-        }}
-      />
+      <Tabs.Screen name="index" options={{ href: null }} />
       <Tabs.Screen
         name="workouts"
         options={{

@@ -1,8 +1,11 @@
 import CustomButton from "@/components/CustomButton";
+import WorkoutHeading from "@/components/WorkoutHeading";
+import WorkoutTimer from "@/components/WorkoutTimer";
 import { getWorkout } from "@/lib/workouts";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Workout() {
   const { id } = useLocalSearchParams();
@@ -34,17 +37,23 @@ export default function Workout() {
   useEffect(() => {
     if (!isStarted) return;
 
-    if (exerciseIndex === workout.exercises.length) {
-      setIsStarted(false);
-      router.back();
-
-      return;
-    }
-
     const interval = setInterval(() => {
       setTimer((prev) => {
-        if (prev === 0) {
-          startNextPhase();
+        const isPhaseFinished = prev === 0;
+
+        if (isPhaseFinished) {
+          const isWorkoutFinished =
+            exerciseIndex + 1 === workout.exercises.length &&
+            phase === "exercise";
+
+          if (isWorkoutFinished) {
+            setIsStarted(false);
+            router.back();
+
+            return 0;
+          } else {
+            startNextPhase();
+          }
         }
 
         return prev - 1;
@@ -55,18 +64,43 @@ export default function Workout() {
   }, [isStarted, phase, exerciseIndex]);
 
   return (
-    <View>
-      <Text>Workout: {workout.title}</Text>
-      <Text>{timer}</Text>
-      <Text>
-        Exercise:
-        {workout.exercises[exerciseIndex]?.title ||
-          workout.exercises[exerciseIndex - 1].title}
-      </Text>
-      <CustomButton
-        title={isStarted ? "Pause" : "Start"}
-        onPress={toggleStart}
-      />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Stack.Screen options={{ headerTitle: workout.title }} />
+      <View style={styles.workout}>
+        <View style={styles.workoutHeadingContainer}>
+          <WorkoutHeading
+            phase={phase}
+            exercises={workout.exercises}
+            exerciseIndex={exerciseIndex}
+          />
+        </View>
+        <View style={styles.workoutTimerContainer}>
+          <WorkoutTimer
+            timer={timer}
+            totalTime={
+              phase === "exercise"
+                ? workout.exerciseDuration
+                : workout.restDuration
+            }
+          />
+        </View>
+        <View style={styles.toggleButtonContainer}>
+          <CustomButton
+            title={isStarted ? "Pause" : "Start"}
+            onPress={toggleStart}
+          />
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  workout: { flex: 1, justifyContent: "space-between", padding: 30 },
+  workoutHeadingContainer: { flex: 1 },
+  workoutTimerContainer: { flex: 1 },
+  toggleButtonContainer: { flex: 1, justifyContent: "flex-end" },
+});

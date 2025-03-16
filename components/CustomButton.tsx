@@ -7,12 +7,14 @@ type CustomButtonProps = {
   title: string;
   onPress?: () => void;
   link?: Href;
+  style?: object;
 };
 
 export default function CustomButton({
   title,
   onPress,
   link,
+  style,
 }: CustomButtonProps) {
   const handlePress = () => {
     if (link) {
@@ -23,7 +25,7 @@ export default function CustomButton({
   };
 
   return (
-    <Pressable style={styles.button} onPress={handlePress}>
+    <Pressable style={[styles.button, style]} onPress={handlePress}>
       <Text style={styles.title}>{title}</Text>
     </Pressable>
   );

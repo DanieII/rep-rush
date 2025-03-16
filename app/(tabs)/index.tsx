@@ -1,22 +1,5 @@
-import { Text, View, StyleSheet } from "react-native";
+import { Redirect } from "expo-router";
 
-export default function Index() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Workout with Rep Rush</Text>
-    </View>
-  );
+export default function index() {
+  return <Redirect href={"/workouts"} />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    padding: 30,
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-});
